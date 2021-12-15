@@ -27,19 +27,14 @@ def make_experiment(cells,directions):
     directions = re.sub(r'[^FRLS]+','',directions)
     
     experiment = Experiment()
-
+    
     for i,cell in enumerate(cells):
         C = H() if cell == 'H' else P()
         d = np.dot(experiment.basis, DIRECTIONS[directions[i]].pos)
         D = Vector(d[0],d[1])
-        experiment.add_Cell(C,D)
+        if not experiment.add_Cell(C,D):
+            return None
         experiment.basis = rotate_vector(DIRECTIONS[directions[i]],experiment.basis)
 
     return experiment
     
-
-exp = make_experiment('HHHHHPPHH','SFRRFLLFF')
-exp.count_energy()
-print(exp.energy,exp.energies)
-exp.plot_Experiment()
-plt.show()

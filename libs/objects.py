@@ -1,3 +1,4 @@
+import re
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
@@ -22,6 +23,9 @@ class Vector:
     def dist(self,vec):
         p = vec.pos - self.pos
         return np.sqrt(np.sum(p**2))
+    
+    def is_equal(self,vec):
+        return self.x == vec.x and self.y == vec.y
        
 class Cell:
     def __init__(self,type,color):
@@ -52,7 +56,6 @@ class Experiment:
         self.start_Pos = Vector(0,0)
         self.current_Pos = Vector(0,0)
         self.first_cell = None
-        self.current_cell = None
         self.max = [0,1]
         self.min = [0,0]
         self.basis = np.identity(2,dtype=float)
@@ -64,10 +67,14 @@ class Experiment:
         cell.set_position(self.current_Pos.copy())
         if self.first_cell is None:
             self.first_cell = cell
-            self.current_cell = cell
         else:
-            self.current_cell.next_cell = cell
-            self.current_cell = cell
+            aux_cell = self.first_cell
+            while aux_cell.next_cell is not None and not aux_cell.pos.is_equal(self.current_Pos):
+                aux_cell = aux_cell.next_cell
+            if aux_cell.next_cell is None:
+                aux_cell.next_cell = cell
+            else:
+                return False
 
         max_x = self.max[0] if self.max[0] > self.current_Pos.x else self.current_Pos.x
         max_y = self.max[1] if self.max[1] > self.current_Pos.y else self.current_Pos.y
@@ -76,6 +83,7 @@ class Experiment:
 
         self.max = [max_x,max_y]
         self.min = [min_x,min_y]
+        return True
     
     def count_energy(self):
         cell_1 = self.first_cell

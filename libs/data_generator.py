@@ -1,4 +1,6 @@
 import itertools
+import pandas as pd
+from functions import make_experiment
 
 def verifica_string(lista,tamanho):
     result = []
@@ -10,7 +12,7 @@ def verifica_string(lista,tamanho):
                 count_H +=1
             elif (lista[i][j] == 'P'):
                 count_P +=1
-        if (count_P >=1 and count_H >= 2 * count_P):
+        if (count_P >=1 and count_H >= tamanho/2):
             result.append(lista[i])
         count_H = 0
         count_P = 0
@@ -42,11 +44,45 @@ def gera_inputs_V2(N): #Recebe uma lista com os comprimentos das strings dos inp
     lista_total = [''.join(x) for x in lista_total]
     return lista_total
 
-#gera_inputs_V2([5,6,7])
-
 
 def gera_gerador(input): #Recebe uma string e gera todas as possíveis combinações de R,L e F
     N = len(input)
     a = list(itertools.product('RLF',repeat = N-1))
     a_str = ['S' + ''.join(x) for x in a]
     return a_str
+
+def generate_InputDataset(values):
+    inputs = gera_inputs_V2(values)
+    Inputs = []
+    Directions = []
+    for i in inputs:
+        directions = gera_gerador(i)
+        for direction in directions:
+            Inputs.append(i)
+            Directions.append(direction)
+    
+    df = pd.DataFrame()
+    df['Inputs'] = Inputs
+    df['Directions'] = Directions
+    return df
+    
+def generate_Dataset(df):
+    I = df['Inputs'].values
+    D = df['Directions'].values
+    energies = []
+    inputs = []
+    directions = []
+    for i in range(len(df)):
+        print(f'{i}/{len(df)}',end='\r')
+        exp = make_experiment(I[i],D[i])
+        if exp is not None:
+            exp.count_energy()
+            energies.append(exp.energy)
+            inputs.append(I[i])
+            directions.append(D[i])
+    final = pd.DataFrame()
+    final['Inputs'] = inputs
+    final['Directions'] = directions
+    final['Energy'] = energies
+    return final
+
