@@ -1,27 +1,41 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+PROBS = [pd.read_pickle(f'altura{i}.pkl') for i in range(6)]
 
 import tensorflow as tf
 import tensorflow_probability as tfp
-td = tfp.distributions
+tfd = tfp.distributions
 
-PROBS = pd.read_pickle('probs.pkl')
+FUNCTIONS = {}
+for case in ['HH','HP','PH','PP']:
+    FUNCTIONS[case] = pd.read_pickle(f'{case}.pkl')
 DIRECTIONS = 'LRF'
 
-def get_distribution(state):
-    probs = PROBS[state].values
-    return td.Categorical(probs=probs)
+def function(f):
+    return lambda x: x*f['w'] + f['b'] + tfd.Normal(0,0.1).sample()
+
+def get_distribution(i,state):
+    if i < 6:
+        probs = PROBS[i][state].values
+    else:
+        pL = function(FUNCTIONS[state])(i)[0]
+        pL = 0.5 if pL > 0.5 else pL
+        pR = pL
+        pF = np.float32(1 - 2*pL)
+        probs = [pL,pR,pF]
+    return tfd.Categorical(probs=probs)
 
 def make_states(values):
-    states = ['_'+values[:2]]
-    for i,val in enumerate(values[1:-1]):
-        states.append(values[i]+val+values[i+2])
+    states = []
+    for i,val in enumerate(values[:-1]):
+        states.append(val+values[i+1])
     return states
 
 def model(values):
     states = make_states(values)
     directions = 'S'
-    for state in states:
-        dist = get_distribution(state)
+    for i,state in enumerate(states):
+        dist = get_distribution(i,state)
         directions += DIRECTIONS[dist.sample()]
     return directions
