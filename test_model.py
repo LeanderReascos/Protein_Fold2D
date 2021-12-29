@@ -5,6 +5,7 @@ import statistics
 
 def compare_models(model,Input,N,max_iterations = 1500):
     dic = {}
+    var = N
     directions = []
     energy = []
     count = 0
@@ -32,7 +33,7 @@ def compare_models(model,Input,N,max_iterations = 1500):
                     energy.append(exp.energy)
                     directions.append(direction)
                     n -= 1
-                print(str(len(energy)) + "/" + "50")
+                print(str(len(energy)) + "/" + str(var))
             count += 1
         average_energy = statistics.mean(energy)
         N -=10
@@ -52,7 +53,7 @@ def compare_models(model,Input,N,max_iterations = 1500):
     
     return dic
 
-print(compare_models(dt,"HPHPPHHPHPPHPHHPPHPH",50,))
+#print(compare_models(dt,"HPHPPHHPHPPHPHHPPHPH",20))
 
 
 
