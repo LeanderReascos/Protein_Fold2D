@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
 
-PROBS = [pd.read_pickle(f'altura{i}.pkl') for i in range(6)]
+PATH = "models/decision_tree/"
+
+PROBS = [pd.read_pickle(PATH + f'altura{i}.pkl') for i in range(6)]
 
 import tensorflow as tf
 import tensorflow_probability as tfp
@@ -9,7 +11,7 @@ tfd = tfp.distributions
 
 FUNCTIONS = {}
 for case in ['HH','HP','PH','PP']:
-    FUNCTIONS[case] = pd.read_pickle(f'{case}.pkl')
+    FUNCTIONS[case] = pd.read_pickle(PATH + f'{case}.pkl')
 DIRECTIONS = 'LRF'
 
 def function(f):
