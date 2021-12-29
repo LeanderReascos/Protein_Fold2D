@@ -1,11 +1,13 @@
 import pandas as pd
 import numpy as np
 
+PATH = "models/model1/"
+
 import tensorflow as tf
 import tensorflow_probability as tfp
 td = tfp.distributions
 
-PROBS = pd.read_pickle('probs.pkl')
+PROBS = pd.read_pickle(PATH + 'probs.pkl')
 DIRECTIONS = 'LRF'
 
 def get_distribution(state):

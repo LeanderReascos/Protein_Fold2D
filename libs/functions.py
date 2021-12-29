@@ -1,5 +1,5 @@
 
-from objects import Vector, H,P, Experiment
+from libs.objects import Vector, H,P, Experiment
 import numpy as np
 import matplotlib.pyplot as plt
 import re
