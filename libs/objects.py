@@ -1,7 +1,7 @@
 import re
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
+from matplotlib.patches import Rectangle,Circle
 
 class Vector:
     def __init__(self,x,y):
@@ -35,11 +35,12 @@ class Cell:
     
     def set_position(self,pos):
         self.pos = pos.copy()
-        self.center = self.pos.pos+np.array([0.5,0.5])
+        self.center = self.pos.pos#+np.array([0.5,0.5])
     
     def plot_cell(self,ax):
         ax.scatter(self.center[0],self.center[1])
-        ax.add_patch(Rectangle((self.pos.x+0.12, self.pos.y+0.12), 0.75, 0.75,color=self.color,zorder=3))
+        #ax.add_patch(Rectangle((self.pos.x+0.12, self.pos.y+0.12), 0.75, 0.75,color=self.color,zorder=3))
+        ax.add_patch(Circle((self.center[0],self.center[1]), radius=0.75/2,color=self.color,zorder=3))
         ax.annotate(self.type,(self.center[0],self.center[1]),fontsize=40,va='center',ha='center')
 
 class H(Cell):
@@ -56,7 +57,7 @@ class Experiment:
         self.start_Pos = Vector(0,0)
         self.current_Pos = Vector(0,0)
         self.first_cell = None
-        self.max = [0,1]
+        self.max = [0,0]
         self.min = [0,0]
         self.basis = np.identity(2,dtype=float)
         self.energies = []
@@ -98,11 +99,32 @@ class Experiment:
                     self.energy += 1
                 cell_2 = cell_2.next_cell
             cell_1 = cell_1.next_cell
+        
+    def make_correlation_matrix(self):
+        cell_1 = self.first_cell
+        self.correlation = []
+        while cell_1 is not None:
+            cell_2 = self.first_cell
+            aux = []
+            while cell_2 is not None:
+                if cell_2 is cell_1:
+                    aux.append(1)
+                elif cell_2 is cell_1.next_cell or cell_1 is cell_2.next_cell:
+                    aux.append(0.5)
+                elif type(cell_1) is H and type(cell_2) is H  and cell_1.pos.dist(cell_2.pos) == 1 and cell_2 is not cell_1.next_cell and cell_1 is not cell_2.next_cell:
+                    aux.append(0.8)
+                else:
+                    aux.append(0)
+                cell_2 = cell_2.next_cell
+            self.correlation.append(aux)
+            cell_1 = cell_1.next_cell
+        self.correlation = np.array(self.correlation)
+        return self.correlation
 
     def plot_Experiment(self):
         fig,ax = plt.subplots(figsize=(10,10))
-        ax.set_xlim(self.min[0],self.max[0]+1)
-        ax.set_ylim(self.min[1],self.max[1]+1)
+        ax.set_xlim(self.min[0]-0.5,self.max[0]+0.5)
+        ax.set_ylim(self.min[1]-0.5,self.max[1]+0.5)
         ax.set_aspect('equal')
         line = []
         cell = self.first_cell
@@ -115,4 +137,5 @@ class Experiment:
         for p in self.energies:
             ax.plot(p[:,0],p[:,1],color='red',lw=3,ls=':')
         ax.plot(line[:,0],line[:,1],color='black',lw=5)
+        ax.axis('off')
             
