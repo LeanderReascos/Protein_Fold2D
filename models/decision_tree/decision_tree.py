@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
+import sys
+sys.path.append('models/')
 
-PATH = "models/decision_tree/"
+PATH = 'C:/Users/reasc/OneDrive - Universidade do Minho (1)/Mestrado/Primer Semestre/PP/Protein_Fold2D/models/decision_tree/'#"models/decision_tree/"
 
 PROBS = [pd.read_pickle(PATH + f'altura{i}.pkl') for i in range(6)]
 
@@ -22,7 +24,8 @@ def get_distribution(i,state):
         probs = PROBS[i][state].values
     else:
         pL = function(FUNCTIONS[state])(i)[0]
-        pL = 0.5 if pL > 0.5 else pL
+        pL = 0.4 if pL > 0.4 else pL
+        pL = 0.1 if pL < 0.1 else pL
         pR = pL
         pF = np.float32(1 - 2*pL)
         probs = [pL,pR,pF]
