@@ -3,7 +3,7 @@ import pandas as pd
 import sys
 sys.path.append('models/')
 
-PATH = 'C:/Users/reasc/OneDrive - Universidade do Minho (1)/Mestrado/Primer Semestre/PP/Protein_Fold2D/models/decision_tree/'#"models/decision_tree/"
+PATH = "models/decision_tree/"#'C:/Users/reasc/OneDrive - Universidade do Minho (1)/Mestrado/Primer Semestre/PP/Protein_Fold2D/models/decision_tree/'
 
 PROBS = [pd.read_pickle(PATH + f'altura{i}.pkl') for i in range(6)]
 

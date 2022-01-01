@@ -5,7 +5,7 @@ import tensorflow as tf
 import tensorflow_probability as tfp
 td = tfp.distributions
 
-PATH = 'C:/Users/reasc/OneDrive - Universidade do Minho (1)/Mestrado/Primer Semestre/PP/Protein_Fold2D/models/model1/'#PATH = 'models/model1/'
+PATH = PATH = 'models/model1/'#'C:/Users/reasc/OneDrive - Universidade do Minho (1)/Mestrado/Primer Semestre/PP/Protein_Fold2D/models/model1/'
 
 PROBS = pd.read_pickle(PATH+'probs.pkl')
 DIRECTIONS = 'LRF'
