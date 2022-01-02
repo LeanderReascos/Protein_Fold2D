@@ -1,6 +1,6 @@
 import sys
 sys.path.append('models/')
-sys.path.append('models/decision_tree/')
+#sys.path.append('models/decision_tree/')
 
 from decision_tree.decision_tree import get_distribution as decision_tree
 from model1.model1 import get_distribution as model1
