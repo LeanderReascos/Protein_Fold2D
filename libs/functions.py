@@ -1,5 +1,5 @@
 
-from libs.objects import Vector, H,P, Experiment
+from objects import Vector, H,P, Experiment
 import numpy as np
 import matplotlib.pyplot as plt
 import re
@@ -37,4 +37,11 @@ def make_experiment(cells,directions):
         experiment.basis = rotate_vector(DIRECTIONS[directions[i]],experiment.basis)
 
     return experiment
-    
+
+if __name__ == '__main__':
+    exp = make_experiment('HPPHH','SLRRL')
+    exp.count_energy()
+    fig,ax = exp.plot_Experiment()
+    PATH = 'C:/Users/reasc/OneDrive - Universidade do Minho (1)/Mestrado/Primer Semestre/PP/probabilistic_programming/Short Talks/Protein Fold 2D/Graficos/'
+    fig.savefig(PATH+'experiment.svg', transparent=True)
+    # plt.show()

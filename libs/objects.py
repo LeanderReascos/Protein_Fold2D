@@ -40,16 +40,17 @@ class Cell:
     def plot_cell(self,ax):
         ax.scatter(self.center[0],self.center[1])
         #ax.add_patch(Rectangle((self.pos.x+0.12, self.pos.y+0.12), 0.75, 0.75,color=self.color,zorder=3))
-        ax.add_patch(Circle((self.center[0],self.center[1]), radius=0.75/2,color=self.color,zorder=3))
-        ax.annotate(self.type,(self.center[0],self.center[1]),fontsize=40,va='center',ha='center')
+        ax.add_patch(Circle((self.center[0],self.center[1]), radius=0.75/2,facecolor=self.color,zorder=3,edgecolor='#1E1C1B'))
+        c = '#1E1C1B' if self.type == 'P' else '#D8D8D8'
+        ax.annotate(self.type,(self.center[0],self.center[1]),fontsize=50,va='center',ha='center',color=c)
 
 class H(Cell):
     def __init__(self):
-        super().__init__('H','#5DD849')
+        super().__init__('H','#1E1C1B')#'#5DD849')
 
 class P(Cell):
     def __init__(self):
-        super().__init__('P','#CB5A29')
+        super().__init__('P','#D8D8D8')#'#CB5A29')
     
 class Experiment:
     def __init__(self,name='Experiment'):
@@ -138,4 +139,15 @@ class Experiment:
             ax.plot(p[:,0],p[:,1],color='red',lw=3,ls=':')
         ax.plot(line[:,0],line[:,1],color='black',lw=5)
         ax.axis('off')
+        return fig,ax
             
+
+if __name__ == '__main__':
+    h1 = H()
+    h2 = P()
+    exp = Experiment()
+    exp.add_Cell(h2,Vector(0,0))
+    fig,ax = exp.plot_Experiment()
+    PATH = 'C:/Users/reasc/OneDrive - Universidade do Minho (1)/Mestrado/Primer Semestre/PP/probabilistic_programming/Short Talks/Protein Fold 2D/Graficos/'
+    fig.savefig(PATH+'P.svg', transparent=True)
+    #plt.show()
