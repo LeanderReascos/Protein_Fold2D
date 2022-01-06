@@ -39,9 +39,9 @@ def make_experiment(cells,directions):
     return experiment
 
 if __name__ == '__main__':
-    exp = make_experiment('HPPHH','SLRRL')
+    exp = make_experiment('HHHPHPPHH','SFFLLRLLR')
     exp.count_energy()
     fig,ax = exp.plot_Experiment()
     PATH = 'C:/Users/reasc/OneDrive - Universidade do Minho (1)/Mestrado/Primer Semestre/PP/probabilistic_programming/Short Talks/Protein Fold 2D/Graficos/'
-    fig.savefig(PATH+'experiment.svg', transparent=True)
-    # plt.show()
+    fig.savefig(PATH+'HHHPHPPHH.svg', transparent=True)
+    plt.show()
